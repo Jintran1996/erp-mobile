@@ -22,7 +22,6 @@ class NotificationProvider extends ChangeNotifier {
   int get unreadCount => _unreadCount;
   bool get loading => _loading;
   String? get error => _error;
-
   // ── Load danh sách ────────────────────────────────────────────────
   Future<void> loadList() async {
     _loading = true;

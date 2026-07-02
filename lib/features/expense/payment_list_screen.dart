@@ -8,12 +8,14 @@ import 'package:provider/provider.dart';
 import '../../providers/payment_provider.dart';
 import '../../core/models/payment_model.dart';
 import '../../core/models/advance_model.dart';
+import '../../core/models/advance_settlement_model.dart';
 import '../_shared/ui/chips.dart';
 import '_shared/expense_status.dart';
 import '_shared/expense_formatters.dart';
 import '_shared/expense_filter_bar.dart';
 import 'payment_detail_screen.dart';
 import 'advance_payments_detail_screen.dart';
+import 'advance_settlements_detail_screen.dart';
 
 class PaymentListScreen extends StatelessWidget {
   final String title;
@@ -68,13 +70,23 @@ class _PaymentListViewState extends State<_PaymentListView> {
   }
 
   void _openDetail(BuildContext context, dynamic item, PaymentListProvider p) {
-    final id = item is PaymentListItem ? item.id : (item as AdvanceListItem).id;
-    final route = item is AdvanceListItem
+    final id = item is PaymentListItem
+        ? item.id
+        : item is AdvanceListItem
+            ? item.id
+            : (item as SettlementListItem).id;
+
+    final route = item is SettlementListItem
         ? MaterialPageRoute(
             builder: (_) =>
-                AdvancePaymentsDetailScreen(id: id, color: widget.color))
-        : MaterialPageRoute(
-            builder: (_) => PaymentDetailScreen(id: id, color: widget.color));
+                AdvanceSettlementsDetailScreen(id: id, color: widget.color))
+        : item is AdvanceListItem
+            ? MaterialPageRoute(
+                builder: (_) =>
+                    AdvancePaymentsDetailScreen(id: id, color: widget.color))
+            : MaterialPageRoute(
+                builder: (_) =>
+                    PaymentDetailScreen(id: id, color: widget.color));
     Navigator.push(context, route);
   }
 
@@ -221,15 +233,22 @@ class _PaymentListViewState extends State<_PaymentListView> {
             return _buildFooter(p);
           }
           final item = p.items[i];
-          return item is AdvanceListItem
-              ? _AdvanceCard(
-                  item: item,
-                  color: widget.color,
-                  onTap: () => _openDetail(ctx, item, p))
-              : _PaymentCard(
-                  item: item as PaymentListItem,
-                  color: widget.color,
-                  onTap: () => _openDetail(ctx, item, p));
+          if (item is SettlementListItem) {
+            return _SettlementCard(
+                item: item,
+                color: widget.color,
+                onTap: () => _openDetail(ctx, item, p));
+          } else if (item is AdvanceListItem) {
+            return _AdvanceCard(
+                item: item,
+                color: widget.color,
+                onTap: () => _openDetail(ctx, item, p));
+          } else {
+            return _PaymentCard(
+                item: item as PaymentListItem,
+                color: widget.color,
+                onTap: () => _openDetail(ctx, item, p));
+          }
         },
       ),
     );
@@ -419,6 +438,110 @@ class _AdvanceCard extends StatelessWidget {
               infoChip(
                 icon: Icons.payments_outlined,
                 label: 'Số tiền tạm ứng',
+                value:
+                    '${formatMoney(item.originalTotalAmount)} ${item.originalCurrencyCode}',
+                color: const Color(0xFF059669),
+              ),
+              const SizedBox(height: 8),
+              Wrap(spacing: 6, runSpacing: 6, children: [
+                if (item.approvedByUser != null)
+                  tagChip(
+                    icon: Icons.check_circle_outline,
+                    label: 'Đã duyệt: ${item.approvedByUser!.fullName}',
+                    bg: const Color(0xFFD1FAE5),
+                    fg: const Color(0xFF065F46),
+                  )
+                else if (item.rejectedByUser != null)
+                  tagChip(
+                    icon: Icons.cancel_outlined,
+                    label: 'Từ chối: ${item.rejectedByUser!.fullName}',
+                    bg: const Color(0xFFFEE2E2),
+                    fg: const Color(0xFF991B1B),
+                  )
+                else if (item.approvers.isNotEmpty)
+                  tagChip(
+                    icon: Icons.people_outline,
+                    label: item.approvers.length == 1
+                        ? approverName
+                        : '$approverName +${item.approvers.length - 1}',
+                    bg: const Color(0xFFEFF6FF),
+                    fg: const Color(0xFF1D4ED8),
+                  ),
+                if (item.createdByUser != null)
+                  tagChip(
+                    icon: Icons.person_outline,
+                    label: item.createdByUser!.position?.isNotEmpty == true
+                        ? '${item.createdByUser!.fullName} · ${item.createdByUser!.position}'
+                        : item.createdByUser!.fullName,
+                    bg: const Color(0xFFF5F3FF),
+                    fg: const Color(0xFF6D28D9),
+                  ),
+              ]),
+            ]),
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
+// ── Card: Thanh toán Tạm ứng ────────────────────────────────────────────────────
+class _SettlementCard extends StatelessWidget {
+  final SettlementListItem item;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _SettlementCard({
+    required this.item,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final cfg = getStatusCfg(item.status);
+    final approverName =
+        item.approvers.isNotEmpty ? item.approvers[0].fullName : '';
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            )
+          ],
+        ),
+        child: Column(children: [
+          // Header
+          _CardHeader(
+            subId: item.subId,
+            createdAt: item.createdAt,
+            icon: Icons.account_balance_wallet_outlined,
+            color: color,
+            cfg: cfg,
+            extraBadge: item.isForeignSettlement ? 'Ngoại tệ' : null,
+          ),
+          // Body
+          Padding(
+            padding: const EdgeInsets.fromLTRB(14, 10, 14, 12),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(item.name,
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w500, height: 1.4),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis),
+              const SizedBox(height: 10),
+              infoChip(
+                icon: Icons.payments_outlined,
+                label: 'Số tiền thanh toán tạm ứng',
                 value:
                     '${formatMoney(item.originalTotalAmount)} ${item.originalCurrencyCode}',
                 color: const Color(0xFF059669),

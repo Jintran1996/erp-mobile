@@ -1,14 +1,11 @@
 // lib/providers/payment_provider.dart
-//
-// Quản lý state cho màn hình Expense (Payment + Advance).
-// Screen chỉ gọi provider.method() và watch state — không biết về API hay model.
 
 import 'package:flutter/foundation.dart';
 import '../core/models/payment_model.dart';
 import '../core/models/advance_model.dart';
+import '../core/models/advance_settlement_model.dart'; // ✅ Fix #2: cùng path với repository
 import '../repositories/payment_repository.dart';
 
-// ── Enum endpoint theo tab ────────────────────────────────────────────
 enum PaymentTab { following, pendingApproval }
 
 enum ExpenseType { payment, advance, advanceSettlement }
@@ -17,15 +14,13 @@ enum ExpenseType { payment, advance, advanceSettlement }
 class PaymentListProvider extends ChangeNotifier {
   final _payRepo = PaymentRepository.instance;
   final _advRepo = AdvanceRepository.instance;
-
+  final _setRepo = SettlementRepository.instance;
   static const int _pageSize = 20;
 
-  // ── State ─────────────────────────────────────────────────────────
   PaymentTab _topTab = PaymentTab.following;
   ExpenseType _bottomTab = ExpenseType.payment;
-  int? _statusFilter; // null = Tất cả
+  int? _statusFilter;
   String _search = '';
-
   List<dynamic> _items = [];
   int _totalCount = 0;
   int _page = 1;
@@ -33,7 +28,6 @@ class PaymentListProvider extends ChangeNotifier {
   bool _loadingMore = false;
   String? _error;
 
-  // ── Getters ────────────────────────────────────────────────────────
   PaymentTab get topTab => _topTab;
   ExpenseType get bottomTab => _bottomTab;
   int? get statusFilter => _statusFilter;
@@ -45,7 +39,6 @@ class PaymentListProvider extends ChangeNotifier {
   bool get hasMore => _items.length < _totalCount;
   String? get error => _error;
 
-  // ── Endpoint theo tab ──────────────────────────────────────────────
   static const _endpoints = {
     PaymentTab.following: {
       ExpenseType.payment: '/api/expense-payments/following',
@@ -61,12 +54,9 @@ class PaymentListProvider extends ChangeNotifier {
   };
 
   String get _currentEndpoint => _endpoints[_topTab]![_bottomTab]!;
+  bool get _isAdvance => _bottomTab == ExpenseType.advance;
+  bool get _isSettlement => _bottomTab == ExpenseType.advanceSettlement;
 
-  bool get _isAdvance =>
-      _bottomTab == ExpenseType.advance ||
-      _bottomTab == ExpenseType.advanceSettlement;
-
-  // ── Actions ────────────────────────────────────────────────────────
   void setTopTab(PaymentTab tab) {
     if (_topTab == tab) return;
     _topTab = tab;
@@ -92,14 +82,12 @@ class PaymentListProvider extends ChangeNotifier {
     loadFirstPage();
   }
 
-  // ── Load first page ────────────────────────────────────────────────
   Future<void> loadFirstPage() async {
     _loading = true;
     _error = null;
     _page = 1;
     _items = [];
     notifyListeners();
-
     try {
       final result = await _fetchPage(page: 1);
       _items = result.items;
@@ -112,12 +100,10 @@ class PaymentListProvider extends ChangeNotifier {
     }
   }
 
-  // ── Load more (infinite scroll) ────────────────────────────────────
   Future<void> loadMore() async {
     if (_loadingMore || !hasMore || _loading) return;
     _loadingMore = true;
     notifyListeners();
-
     try {
       final nextPage = _page + 1;
       final result = await _fetchPage(page: nextPage);
@@ -125,7 +111,6 @@ class PaymentListProvider extends ChangeNotifier {
       _items = [..._items, ...result.items];
       _totalCount = result.totalCount;
     } catch (_) {
-      // loadMore fail → không hiện lỗi, chỉ dừng load
     } finally {
       _loadingMore = false;
       notifyListeners();
@@ -133,34 +118,39 @@ class PaymentListProvider extends ChangeNotifier {
   }
 
   Future<PagedResult<dynamic>> _fetchPage({required int page}) async {
-    if (_isAdvance) {
-      return _advRepo.getList(
-        endpoint: _currentEndpoint,
-        page: page,
-        pageSize: _pageSize,
-        status: _statusFilter,
-        search: _search.isNotEmpty ? _search : null,
-      );
-    } else {
-      return _payRepo.getList(
-        endpoint: _currentEndpoint,
-        page: page,
-        pageSize: _pageSize,
-        status: _statusFilter,
-        search: _search.isNotEmpty ? _search : null,
-      );
-    }
+    final params = (String ep) => (int p) async {
+          if (_isAdvance)
+            return _advRepo.getList(
+                endpoint: ep,
+                page: p,
+                pageSize: _pageSize,
+                status: _statusFilter,
+                search: _search.isNotEmpty ? _search : null);
+          if (_isSettlement)
+            return _setRepo.getList(
+                endpoint: ep,
+                page: p,
+                pageSize: _pageSize,
+                status: _statusFilter,
+                search: _search.isNotEmpty ? _search : null);
+          return _payRepo.getList(
+              endpoint: ep,
+              page: p,
+              pageSize: _pageSize,
+              status: _statusFilter,
+              search: _search.isNotEmpty ? _search : null);
+        };
+    return params(_currentEndpoint)(page);
   }
 }
 
 // ── PaymentDetailProvider ─────────────────────────────────────────────
 class PaymentDetailProvider extends ChangeNotifier {
-  final _payRepo = PaymentRepository.instance;
-
+  final _repo = PaymentRepository.instance;
   PaymentDetail? _detail;
   bool _loading = false;
   String? _error;
-  bool _acting = false; // đang duyệt/từ chối
+  bool _acting = false;
 
   PaymentDetail? get detail => _detail;
   bool get loading => _loading;
@@ -171,9 +161,8 @@ class PaymentDetailProvider extends ChangeNotifier {
     _loading = true;
     _error = null;
     notifyListeners();
-
     try {
-      _detail = await _payRepo.getDetail(id);
+      _detail = await _repo.getDetail(id);
     } catch (e) {
       _error = e.toString();
     } finally {
@@ -186,8 +175,8 @@ class PaymentDetailProvider extends ChangeNotifier {
     _acting = true;
     notifyListeners();
     try {
-      await _payRepo.approve(id);
-      await load(id); // reload để cập nhật status
+      await _repo.approve(id);
+      await load(id);
       return true;
     } catch (e) {
       _acting = false;
@@ -200,7 +189,7 @@ class PaymentDetailProvider extends ChangeNotifier {
     _acting = true;
     notifyListeners();
     try {
-      await _payRepo.reject(id, reason);
+      await _repo.reject(id, reason);
       await load(id);
       return true;
     } catch (e) {
@@ -211,10 +200,9 @@ class PaymentDetailProvider extends ChangeNotifier {
   }
 }
 
-// ── AdvanceDetailProvider ─────────────────────────────────────────────
+// ── AdvanceDetailProvider — Fix #3: thêm lại class bị thiếu ──────────
 class AdvanceDetailProvider extends ChangeNotifier {
-  final _advRepo = AdvanceRepository.instance;
-
+  final _repo = AdvanceRepository.instance;
   AdvanceDetail? _detail;
   bool _loading = false;
   String? _error;
@@ -229,9 +217,8 @@ class AdvanceDetailProvider extends ChangeNotifier {
     _loading = true;
     _error = null;
     notifyListeners();
-
     try {
-      _detail = await _advRepo.getDetail(id);
+      _detail = await _repo.getDetail(id);
     } catch (e) {
       _error = e.toString();
     } finally {
@@ -244,7 +231,7 @@ class AdvanceDetailProvider extends ChangeNotifier {
     _acting = true;
     notifyListeners();
     try {
-      await _advRepo.approve(id);
+      await _repo.approve(id);
       await load(id);
       return true;
     } catch (e) {
@@ -258,7 +245,63 @@ class AdvanceDetailProvider extends ChangeNotifier {
     _acting = true;
     notifyListeners();
     try {
-      await _advRepo.reject(id, reason);
+      await _repo.reject(id, reason);
+      await load(id);
+      return true;
+    } catch (e) {
+      _acting = false;
+      notifyListeners();
+      return false;
+    }
+  }
+}
+
+// ── SettlementDetailProvider ──────────────────────────────────────────
+class SettlementDetailProvider extends ChangeNotifier {
+  final _repo = SettlementRepository.instance;
+  SettlementDetail? _detail;
+  bool _loading = false;
+  String? _error;
+  bool _acting = false;
+
+  SettlementDetail? get detail => _detail;
+  bool get loading => _loading;
+  String? get error => _error;
+  bool get acting => _acting;
+
+  Future<void> load(String id) async {
+    _loading = true;
+    _error = null;
+    notifyListeners();
+    try {
+      _detail = await _repo.getDetail(id);
+    } catch (e) {
+      _error = e.toString();
+    } finally {
+      _loading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> approve(String id) async {
+    _acting = true;
+    notifyListeners();
+    try {
+      await _repo.approve(id);
+      await load(id);
+      return true;
+    } catch (e) {
+      _acting = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> reject(String id, String reason) async {
+    _acting = true;
+    notifyListeners();
+    try {
+      await _repo.reject(id, reason);
       await load(id);
       return true;
     } catch (e) {
