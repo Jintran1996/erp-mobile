@@ -60,6 +60,10 @@ class ApiClient {
     _tokenProvider = provider;
   }
 
+  // Getter cho CommentRepository dùng upload file multipart
+  String get baseUrl => AppConfig.baseUrl;
+  String? get currentToken => _tokenProvider?.token;
+
   bool _isRefreshing = false;
 
   // ── Interceptor REQUEST ───────────────────────────────────────────────

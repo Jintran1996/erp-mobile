@@ -11,6 +11,8 @@ import '../_shared/ui/chips.dart';
 import '../_shared/ui/section_widgets.dart';
 import '_shared/expense_status.dart';
 import '_shared/expense_formatters.dart';
+import '../../providers/comment_provider.dart';
+import '../_shared/ui/comment_section.dart';
 
 class PaymentDetailScreen extends StatelessWidget {
   final String id;
@@ -20,8 +22,15 @@ class PaymentDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => PaymentDetailProvider()..load(id),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+            create: (_) => PaymentDetailProvider()..load(id)),
+        ChangeNotifierProvider(
+            create: (_) => CommentProvider()
+              ..init(id, 'expense-payment')
+              ..loadComments()),
+      ],
       child: _PaymentDetailView(id: id, color: color),
     );
   }
@@ -198,6 +207,7 @@ class _PaymentDetailView extends StatelessWidget {
         color: color,
         child: _buildAttachments(d.attachments),
       ),
+      CommentSection(color: color),
       const SizedBox(height: 30),
     ]));
   }

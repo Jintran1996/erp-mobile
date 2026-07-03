@@ -117,30 +117,33 @@ class PaymentListProvider extends ChangeNotifier {
     }
   }
 
+  // Khi search: dùng pageSize lớn hơn để lấy nhiều kết quả từ backend
+  // Backend filter trong toàn bộ data, trả về theo pageSize
+  int get _effectivePageSize => _search.isNotEmpty ? 100 : _pageSize;
+
   Future<PagedResult<dynamic>> _fetchPage({required int page}) async {
-    final params = (String ep) => (int p) async {
-          if (_isAdvance)
-            return _advRepo.getList(
-                endpoint: ep,
-                page: p,
-                pageSize: _pageSize,
-                status: _statusFilter,
-                search: _search.isNotEmpty ? _search : null);
-          if (_isSettlement)
-            return _setRepo.getList(
-                endpoint: ep,
-                page: p,
-                pageSize: _pageSize,
-                status: _statusFilter,
-                search: _search.isNotEmpty ? _search : null);
-          return _payRepo.getList(
-              endpoint: ep,
-              page: p,
-              pageSize: _pageSize,
-              status: _statusFilter,
-              search: _search.isNotEmpty ? _search : null);
-        };
-    return params(_currentEndpoint)(page);
+    final size = _effectivePageSize;
+    final s = _search.isNotEmpty ? _search : null;
+    if (_isAdvance)
+      return _advRepo.getList(
+          endpoint: _currentEndpoint,
+          page: page,
+          pageSize: size,
+          status: _statusFilter,
+          search: s);
+    if (_isSettlement)
+      return _setRepo.getList(
+          endpoint: _currentEndpoint,
+          page: page,
+          pageSize: size,
+          status: _statusFilter,
+          search: s);
+    return _payRepo.getList(
+        endpoint: _currentEndpoint,
+        page: page,
+        pageSize: size,
+        status: _statusFilter,
+        search: s);
   }
 }
 

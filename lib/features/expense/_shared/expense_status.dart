@@ -18,16 +18,23 @@ class StatusCfg {
 /// status 6, 7 hiện chỉ xuất hiện trong dữ liệu Tạm ứng —
 /// TODO: hỏi backend ý nghĩa chính xác rồi cập nhật label bên dưới.
 const Map<int, StatusCfg> expenseStatusMap = {
-  0: StatusCfg('Nháp', Color(0xFFF1F5F9), Color(0xFF64748B)),
-  1: StatusCfg('Chờ duyệt', Color(0xFFFEF3C7), Color(0xFFB45309)),
+  // ── Cơ bản ─────────────────────────────────────────────────────────
+  0: StatusCfg('Nháp', Color(0xFFF1F5F9), Color(0xFF475569)),
+  1: StatusCfg('Chờ duyệt', Color(0xFFFEF3C7), Color(0xFF92400E)),
   2: StatusCfg('Đã duyệt', Color(0xFFD1FAE5), Color(0xFF065F46)),
   3: StatusCfg('Từ chối', Color(0xFFFEE2E2), Color(0xFF991B1B)),
-  4: StatusCfg('Đã chi', Color(0xFFEDE9FE), Color(0xFF5B21B6)),
-  5: StatusCfg('Đã hủy', Color(0xFFF1F5F9), Color(0xFF64748B)),
-  6: StatusCfg('Trạng thái 6', Color(0xFFDBEAFE),
-      Color(0xFF1E40AF)), // TODO: chờ xác nhận backend
-  7: StatusCfg('Trạng thái 7', Color(0xFFFCE7F3),
-      Color(0xFF9D174D)), // TODO: chờ xác nhận backend
+  4: StatusCfg('Đã hủy', Color(0xFFF3F4F6), Color(0xFF6B7280)),
+
+  // ── Lệnh thanh toán ────────────────────────────────────────────────
+  5: StatusCfg('Tạo lệnh 1 phần', Color(0xFFDBEAFE), Color(0xFF1D4ED8)),
+  6: StatusCfg('Tạo lệnh đầy đủ', Color.fromARGB(255, 199, 130, 226),
+      Color.fromARGB(255, 195, 0, 255)),
+
+  // ── Hoàn ứng ───────────────────────────────────────────────────────
+  7: StatusCfg('Chờ hoàn ứng', Color(0xFFFEF3C7), Color(0xFF92400E)),
+  8: StatusCfg('Hoàn ứng 1 phần', Color(0xFFEFF6FF), Color(0xFF1E40AF)),
+  9: StatusCfg('Hoàn ứng đầy đủ', Color(0xFFDBEAFE), Color(0xFF1D4ED8)),
+  10: StatusCfg('Đã hoàn thành', Color(0xFFD1FAE5), Color(0xFF065F46)),
 };
 
 /// Lấy cấu hình trạng thái an toàn — fallback về "Nháp" nếu status lạ.
@@ -49,4 +56,5 @@ const List<StatusFilterItem> defaultStatusFilters = [
   StatusFilterItem('Chờ duyệt', 1),
   StatusFilterItem('Đã duyệt', 2),
   StatusFilterItem('Từ chối', 3),
+  StatusFilterItem('Tạo lệnh đầy đủ', 6),
 ];
