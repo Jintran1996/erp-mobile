@@ -5,14 +5,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../providers/payment_provider.dart';
-import '../../core/models/payment_model.dart';
-import '../../core/models/advance_model.dart';
-import '../../core/models/advance_settlement_model.dart';
-import '../_shared/ui/chips.dart';
-import '_shared/expense_status.dart';
-import '_shared/expense_formatters.dart';
-import '_shared/expense_filter_bar.dart';
+import '../presentation/payment_provider.dart';
+import '../../expense/data/advance_model.dart';
+import '../../expense/data/advance_settlement_model.dart';
+import '../../expense/data/payment_model.dart';
+import '../../_shared/ui/chips.dart';
+import '../_shared/expense_status.dart';
+import '../_shared/expense_formatters.dart';
+import '../_shared/expense_filter_bar.dart';
 import 'payment_detail_screen.dart';
 import 'advance_payments_detail_screen.dart';
 import 'advance_settlements_detail_screen.dart';
@@ -543,7 +543,7 @@ class _SettlementCard extends StatelessWidget {
                 icon: Icons.payments_outlined,
                 label: 'Số tiền thanh toán tạm ứng',
                 value:
-                    '${formatMoney(item.originalTotalAmount)} ${item.originalCurrencyCode}',
+                    '${formatMoney(item.baseTotalWithTax)} ${item.originalCurrencyCode}',
                 color: const Color(0xFF059669),
               ),
               const SizedBox(height: 8),

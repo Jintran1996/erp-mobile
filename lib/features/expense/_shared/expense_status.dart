@@ -27,8 +27,7 @@ const Map<int, StatusCfg> expenseStatusMap = {
 
   // ── Lệnh thanh toán ────────────────────────────────────────────────
   5: StatusCfg('Tạo lệnh 1 phần', Color(0xFFDBEAFE), Color(0xFF1D4ED8)),
-  6: StatusCfg('Tạo lệnh đầy đủ', Color.fromARGB(255, 199, 130, 226),
-      Color.fromARGB(255, 195, 0, 255)),
+  6: StatusCfg('Tạo lệnh đầy đủ', Color(0xFFD1FAE5), Color(0xFF065F46)),
 
   // ── Hoàn ứng ───────────────────────────────────────────────────────
   7: StatusCfg('Chờ hoàn ứng', Color(0xFFFEF3C7), Color(0xFF92400E)),

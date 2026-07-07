@@ -5,16 +5,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import '../../providers/payment_provider.dart';
-import '../../core/models/advance_settlement_model.dart';
-import '../../core/models/payment_model.dart';
-import '../_shared/countdown_timer.dart';
-import '../_shared/ui/chips.dart';
-import '../_shared/ui/section_widgets.dart';
-import '_shared/expense_status.dart';
-import '_shared/expense_formatters.dart';
-import '../../providers/comment_provider.dart';
-import '../_shared/ui/comment_section.dart';
+import '../presentation/payment_provider.dart';
+import '../../expense/data/advance_settlement_model.dart';
+import '../../expense/data/payment_model.dart';
+import '../../_shared/countdown_timer.dart';
+import '../../_shared/ui/chips.dart';
+import '../../_shared/ui/section_widgets.dart';
+import '../_shared/expense_status.dart';
+import '../_shared/expense_formatters.dart';
+import '../../../providers/comment_provider.dart';
+import '../../_shared/ui/comment_section.dart';
 
 class AdvanceSettlementsDetailScreen extends StatelessWidget {
   final String id;
@@ -550,54 +550,58 @@ class _SettlementDetailView extends StatelessWidget {
     if (!d.canAct) return const SizedBox.shrink();
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
       child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-        if (d.currentStep?.dueAt != null) ...[
-          CountdownTimer(dueAt: d.currentStep!.dueAt!),
-          const SizedBox(width: 8),
-        ],
-        ElevatedButton(
-          onPressed: p.acting
-              ? null
-              : () => _showConfirm(ctx,
-                      title: 'Xác nhận duyệt',
-                      message: 'Duyệt phiếu quyết toán này?',
-                      btnColor: const Color(0xFF059669), onConfirm: () async {
-                    final ok = await p.approve(id);
-                    if (ctx.mounted)
-                      ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
-                        content: Text(ok ? '✅ Đã duyệt' : '❌ Duyệt thất bại'),
-                        backgroundColor:
-                            ok ? const Color(0xFF059669) : Colors.red,
-                        behavior: SnackBarBehavior.floating,
-                      ));
-                  }),
-          style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF059669),
-              foregroundColor: Colors.white,
-              minimumSize: const Size(100, 42),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12))),
-          child: p.acting
-              ? const SizedBox(
-                  width: 18,
-                  height: 18,
-                  child: CircularProgressIndicator(
-                      color: Colors.white, strokeWidth: 2))
-              : const Text('Duyệt',
-                  style: TextStyle(fontWeight: FontWeight.w600)),
+        //   if (d.currentStep?.dueAt != null) ...[
+        //     CountdownTimer(dueAt: d.currentStep!.dueAt!),
+        //     const SizedBox(width: 8),
+        //  ],
+        Expanded(
+          child: ElevatedButton(
+            onPressed: p.acting
+                ? null
+                : () => _showConfirm(ctx,
+                        title: 'Xác nhận duyệt',
+                        message: 'Duyệt phiếu quyết toán này?',
+                        btnColor: const Color(0xFF059669), onConfirm: () async {
+                      final ok = await p.approve(id);
+                      if (ctx.mounted)
+                        ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+                          content: Text(ok ? '✅ Đã duyệt' : '❌ Duyệt thất bại'),
+                          backgroundColor:
+                              ok ? const Color(0xFF059669) : Colors.red,
+                          behavior: SnackBarBehavior.floating,
+                        ));
+                    }),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF059669),
+                foregroundColor: Colors.white,
+                minimumSize: const Size(0, 40),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14))),
+            child: p.acting
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                        color: Colors.white, strokeWidth: 2))
+                : const Text('Duyệt',
+                    style: TextStyle(fontWeight: FontWeight.w600)),
+          ),
         ),
         const SizedBox(width: 8),
-        ElevatedButton(
-          onPressed: p.acting ? null : () => _showReject(ctx, p),
-          style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFDC2626),
-              foregroundColor: Colors.white,
-              minimumSize: const Size(100, 42),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12))),
-          child: const Text('Từ chối',
-              style: TextStyle(fontWeight: FontWeight.w600)),
+        Expanded(
+          child: ElevatedButton(
+            onPressed: p.acting ? null : () => _showReject(ctx, p),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFDC2626),
+                foregroundColor: Colors.white,
+                minimumSize: const Size(0, 40),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14))),
+            child: const Text('Từ chối',
+                style: TextStyle(fontWeight: FontWeight.w600)),
+          ),
         ),
       ]),
     );

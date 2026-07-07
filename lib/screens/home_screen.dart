@@ -11,7 +11,7 @@ import '../services/api_client.dart';
 import '../services/notification_service.dart';
 import '../widgets/app_mini_card.dart';
 import '../widgets/notification_badge.dart';
-import '../features/expense/expense_screen.dart';
+import '../features/expense/presentation/expense_screen.dart';
 import '../features/baocao/bao_cao_screen.dart';
 import '../features/_shared/app_mini_base.dart';
 import 'notification_screen.dart';
@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
       screen: BaoCaoScreen(),
     ),
     AppMiniItem(
-      name: 'Expense',
+      name: 'Chi phí',
       icon: Icons.attach_money,
       color: Color(0xFF16A34A),
       screen: ExpenseScreen(),

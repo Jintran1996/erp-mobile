@@ -13,10 +13,11 @@ class SettlementListItem {
   final String subId;
   final String name;
   final int status;
+  final num? baseSettlementTotalWithTax;
+  final num? baseTotalWithTax;
   final num? originalTotalAmount;
   final String originalCurrencyCode;
   final bool isForeignSettlement;
-  final num? baseSettlementTotalWithTax;
   final String? createdAt;
   final PaymentUser? createdByUser;
   final List<PaymentUser> approvers;
@@ -29,6 +30,7 @@ class SettlementListItem {
     required this.name,
     required this.status,
     this.baseSettlementTotalWithTax,
+    this.baseTotalWithTax,
     this.originalTotalAmount,
     this.originalCurrencyCode = 'VND',
     this.isForeignSettlement = false,
@@ -50,6 +52,7 @@ class SettlementListItem {
       name: j['name']?.toString() ?? '—',
       status: (j['status'] as int?) ?? 0,
       baseSettlementTotalWithTax: j['baseSettlementTotalWithTax'] as num?,
+      baseTotalWithTax: j['baseTotalWithTax'] as num?,
       createdAt: j['createdAt'] as String?,
       createdByUser: j['createdByUser'] != null
           ? PaymentUser.fromJson(j['createdByUser'] as Map<String, dynamic>)
@@ -68,6 +71,8 @@ class SettlementLineItem {
   final num taxRate; // 0.08 = 8%
   final num taxAmount; // tiền thuế
   final num totalWithTax; // thành tiền sau thuế ← field chính
+  final num baseSettlementTotalWithTax;
+  final num baseTotalWithTax;
   final String? budgetCode;
   final String? budgetCodeName;
   final String? budgetGroupName;
@@ -81,6 +86,8 @@ class SettlementLineItem {
     required this.taxRate,
     required this.taxAmount,
     required this.totalWithTax,
+    required this.baseSettlementTotalWithTax,
+    required this.baseTotalWithTax,
     this.budgetCode,
     this.budgetCodeName,
     this.budgetGroupName,
@@ -98,6 +105,9 @@ class SettlementLineItem {
       taxRate: (j['taxRate'] as num?) ?? 0,
       taxAmount: (j['taxAmount'] as num?) ?? 0,
       totalWithTax: (j['totalWithTax'] as num?) ?? 0,
+      baseSettlementTotalWithTax:
+          (j['baseSettlementTotalWithTax'] as num?) ?? 0,
+      baseTotalWithTax: (j['baseTotalWithTax'] as num?) ?? 0,
       budgetCode: bc?['code'] as String?,
       budgetCodeName: bc?['name'] as String?,
       budgetGroupName: bg?['name'] as String?,

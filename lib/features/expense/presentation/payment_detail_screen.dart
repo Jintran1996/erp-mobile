@@ -4,15 +4,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import '../../providers/payment_provider.dart';
-import '../../core/models/payment_model.dart';
-import '../_shared/countdown_timer.dart';
-import '../_shared/ui/chips.dart';
-import '../_shared/ui/section_widgets.dart';
-import '_shared/expense_status.dart';
-import '_shared/expense_formatters.dart';
-import '../../providers/comment_provider.dart';
-import '../_shared/ui/comment_section.dart';
+import '../presentation/payment_provider.dart';
+
+import '../../expense/data/payment_model.dart';
+import '../../_shared/countdown_timer.dart';
+import '../../_shared/ui/chips.dart';
+import '../../_shared/ui/section_widgets.dart';
+import '../_shared/expense_status.dart';
+import '../_shared/expense_formatters.dart';
+import '../../../providers/comment_provider.dart';
+import '../../_shared/ui/comment_section.dart';
 
 class PaymentDetailScreen extends StatelessWidget {
   final String id;
@@ -68,6 +69,9 @@ class _PaymentDetailView extends StatelessWidget {
           : p.error != null
               ? _buildError(context, p)
               : _buildBody(context, p.detail!, p),
+      bottomNavigationBar: (!p.loading && p.error == null && p.detail != null)
+          ? _buildActionBar(context, p.detail!, p)
+          : null,
     );
   }
 
@@ -148,8 +152,8 @@ class _PaymentDetailView extends StatelessWidget {
       BuildContext context, PaymentDetail d, PaymentDetailProvider p) {
     return SingleChildScrollView(
         child: Column(children: [
-      _buildActionBar(context, d, p),
-      const SizedBox(height: 8),
+      // _buildActionBar(context, d, p),
+      // const SizedBox(height: 8),
       expenseMoneyRow([
         MoneyCell('Tổng tiền TT', '${formatMoney(d.baseTotalWithTax)} ₫',
             const Color(0xFF059669),
@@ -213,42 +217,40 @@ class _PaymentDetailView extends StatelessWidget {
   }
 
   Widget _buildActionBar(
-      BuildContext context, PaymentDetail d, PaymentDetailProvider p) {
-    final dueAt = d.currentStep?.dueAt;
+      BuildContext ctx, PaymentDetail d, PaymentDetailProvider p) {
+    // final dueAt = d.currentStep?.dueAt;
+    if (!d.canAct) return const SizedBox.shrink();
     return Container(
-      width: double.infinity,
       color: Colors.white,
-      padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
       child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-        if (d.canAct) ...[
-          ElevatedButton(
+        //   if (d.currentStep?.dueAt != null) ...[
+        //     CountdownTimer(dueAt: d.currentStep!.dueAt!),
+        //     const SizedBox(width: 8),
+        //  ],
+        Expanded(
+          child: ElevatedButton(
             onPressed: p.acting
                 ? null
-                : () => _showConfirmDialog(
-                      context,
-                      title: 'Xác nhận duyệt',
-                      message: 'Bạn có chắc muốn duyệt phiếu này?',
-                      color: const Color(0xFF059669),
-                      onConfirm: () async {
-                        final ok = await p.approve(id);
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(
-                                ok ? '✅ Đã duyệt phiếu' : '❌ Duyệt thất bại'),
-                            backgroundColor:
-                                ok ? const Color(0xFF059669) : Colors.red,
-                            behavior: SnackBarBehavior.floating,
-                          ));
-                        }
-                      },
-                    ),
+                : () => _showConfirmDialog(ctx,
+                        title: 'Xác nhận duyệt',
+                        message: 'Duyệt phiếu quyết toán này?',
+                        btnColor: const Color(0xFF059669), onConfirm: () async {
+                      final ok = await p.approve(id);
+                      if (ctx.mounted)
+                        ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+                          content: Text(ok ? '✅ Đã duyệt' : '❌ Duyệt thất bại'),
+                          backgroundColor:
+                              ok ? const Color(0xFF059669) : Colors.red,
+                          behavior: SnackBarBehavior.floating,
+                        ));
+                    }),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF059669),
-              foregroundColor: Colors.white,
-              minimumSize: const Size(100, 42),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-            ),
+                backgroundColor: const Color(0xFF059669),
+                foregroundColor: Colors.white,
+                minimumSize: const Size(0, 40),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14))),
             child: p.acting
                 ? const SizedBox(
                     width: 18,
@@ -258,22 +260,21 @@ class _PaymentDetailView extends StatelessWidget {
                 : const Text('Duyệt',
                     style: TextStyle(fontWeight: FontWeight.w600)),
           ),
-          const SizedBox(width: 8),
-          ElevatedButton(
-            onPressed: p.acting ? null : () => _showRejectDialog(context, p),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: ElevatedButton(
+            onPressed: p.acting ? null : () => _showRejectDialog(ctx, p),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFDC2626),
-              foregroundColor: Colors.white,
-              minimumSize: const Size(100, 42),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-            ),
+                backgroundColor: const Color(0xFFDC2626),
+                foregroundColor: Colors.white,
+                minimumSize: const Size(0, 40),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14))),
             child: const Text('Từ chối',
                 style: TextStyle(fontWeight: FontWeight.w600)),
           ),
-          const SizedBox(width: 8),
-        ],
-        if (dueAt != null) CountdownTimer(dueAt: dueAt),
+        ),
       ]),
     );
   }
@@ -571,24 +572,24 @@ class _PaymentDetailView extends StatelessWidget {
   }
 
   void _showConfirmDialog(
-    BuildContext context, {
+    BuildContext ctx, {
     required String title,
     required String message,
-    required Color color,
+    required Color btnColor,
     required VoidCallback onConfirm,
   }) {
     showDialog(
-        context: context,
+        context: ctx,
         builder: (_) => AlertDialog(
               title: Text(title),
               content: Text(message),
               actions: [
                 TextButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => Navigator.pop(ctx),
                     child: const Text('Hủy')),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.pop(ctx);
                     onConfirm();
                   },
                   style: ElevatedButton.styleFrom(
@@ -599,10 +600,10 @@ class _PaymentDetailView extends StatelessWidget {
             ));
   }
 
-  void _showRejectDialog(BuildContext context, PaymentDetailProvider p) {
+  void _showRejectDialog(BuildContext ctx, PaymentDetailProvider p) {
     final ctrl = TextEditingController();
     showDialog(
-        context: context,
+        context: ctx,
         builder: (_) => AlertDialog(
               title: const Text('Từ chối phiếu'),
               content: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -621,15 +622,15 @@ class _PaymentDetailView extends StatelessWidget {
               ]),
               actions: [
                 TextButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => Navigator.pop(ctx),
                     child: const Text('Hủy')),
                 ElevatedButton(
                   onPressed: () async {
                     if (ctrl.text.trim().isEmpty) return;
-                    Navigator.pop(context);
+                    Navigator.pop(ctx);
                     final ok = await p.reject(id, ctrl.text.trim());
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    if (ctx.mounted) {
+                      ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
                         content: Text(
                             ok ? '❌ Đã từ chối phiếu' : '❌ Từ chối thất bại'),
                         backgroundColor: const Color(0xFFDC2626),

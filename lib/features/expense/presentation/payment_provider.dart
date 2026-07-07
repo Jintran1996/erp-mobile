@@ -1,10 +1,10 @@
 // lib/providers/payment_provider.dart
 
 import 'package:flutter/foundation.dart';
-import '../core/models/payment_model.dart';
-import '../core/models/advance_model.dart';
-import '../core/models/advance_settlement_model.dart'; // ✅ Fix #2: cùng path với repository
-import '../repositories/payment_repository.dart';
+import '../data/payment_model.dart';
+import '../data/advance_model.dart';
+import '../data/advance_settlement_model.dart'; // ✅ Fix #2: cùng path với repository
+import '../data/payment_repository.dart';
 
 enum PaymentTab { following, pendingApproval }
 

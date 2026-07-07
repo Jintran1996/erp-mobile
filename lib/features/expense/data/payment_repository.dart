@@ -1,9 +1,9 @@
 // lib/repositories/payment_repository.dart
 
-import '../services/api_client.dart';
-import '../core/models/payment_model.dart';
-import '../core/models/advance_model.dart';
-import '../core/models/advance_settlement_model.dart'; // ✅ Fix #1: chữ thường
+import '../../../services/api_client.dart';
+import 'advance_model.dart';
+import 'advance_settlement_model.dart';
+import 'payment_model.dart'; // ✅ Fix #1: chữ thường
 
 class PaymentRepository {
   PaymentRepository._();
@@ -21,7 +21,8 @@ class PaymentRepository {
       'PageIndex': page,
       'PageSize': pageSize,
       if (status != null) 'Status': status,
-      if (search != null && search.isNotEmpty) 'Name': search,
+      if (search != null && search.isNotEmpty)
+        _isSubId(search) ? 'subId' : 'name': search,
     });
     final data = res['data'] as Map<String, dynamic>;
     return PagedResult(
@@ -72,7 +73,8 @@ class AdvanceRepository {
       'PageIndex': page,
       'PageSize': pageSize,
       if (status != null) 'Status': status,
-      if (search != null && search.isNotEmpty) 'Name': search,
+      if (search != null && search.isNotEmpty)
+        _isSubId(search) ? 'subId' : 'name': search,
     });
     final data = res['data'] as Map<String, dynamic>;
     return PagedResult(
@@ -123,7 +125,8 @@ class SettlementRepository {
       'PageIndex': page,
       'PageSize': pageSize,
       if (status != null) 'Status': status,
-      if (search != null && search.isNotEmpty) 'Name': search,
+      if (search != null && search.isNotEmpty)
+        _isSubId(search) ? 'subId' : 'name': search,
     });
     final data = res['data'] as Map<String, dynamic>;
     return PagedResult(
@@ -179,3 +182,5 @@ class RepositoryException implements Exception {
   @override
   String toString() => message;
 }
+
+bool _isSubId(String s) => RegExp(r'^[0-9]+$').hasMatch(s.trim());
