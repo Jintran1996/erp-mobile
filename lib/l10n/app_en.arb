@@ -1,0 +1,36 @@
+{
+  "@@locale": "en",
+
+  "dyeingReportHubTitle": "Dyeing Report",
+
+  "reportRejectionsTitle": "Rejections Dashboard",
+  "reportRejectionsDesc": "Track monthly Reprocess & Defect rate",
+
+  "reportProductionTitle": "Production Report",
+  "reportProductionDesc": "Output & efficiency by production line 123",
+
+  "reportInventoryTitle": "Inventory Report",
+  "reportInventoryDesc": "Current raw material & finished goods inventory",
+
+  "reportQualityTitle": "Quality Report",
+  "reportQualityDesc": "Summary of defects, causes, and locations",
+
+  "reportPlaceholderBody": "{title} — detail screen not available yet",
+
+  "rejectionsNote": "*NOTE: Search by year, data updated by month and year. Please select the correct information.",
+  "rejectionsListChartLabel": "List / Chart",
+  "rejectionsReprocessChartTitle": "{year} - Reprocess %",
+  "rejectionsDefectChartTitle": "{year} - Defect %",
+
+  "filterSearch": "Search",
+  "filterUpdate": "Update",
+  "filterDate": "Date",
+  "filterMarkets": "Markets",
+
+  "colMonth": "Month",
+  "colTotal": "Total",
+  "colReprocess": "Reprocess",
+  "colReprocessPercent": "Reprocess %",
+  "colDefect": "Defect",
+  "colDefectPercent": "Defect %"
+}

@@ -5,6 +5,7 @@
 //   lib/widgets/app_mini_card.dart        ← AppMiniItem + AppMiniCard
 //   lib/widgets/notification_badge.dart   ← NotificationBadge
 
+import 'package:erp_mobile/features/baocao/bao_cao_screen.dart';
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../services/api_client.dart';
@@ -12,9 +13,10 @@ import '../services/notification_service.dart';
 import '../widgets/app_mini_card.dart';
 import '../widgets/notification_badge.dart';
 import '../features/expense/presentation/expense_screen.dart';
-import '../features/baocao/bao_cao_screen.dart';
+import '../features/dyeing_report/dyeing_report_hub_screen.dart';
 import '../features/_shared/app_mini_base.dart';
 import 'notification_screen.dart';
+import 'settings_screen.dart';
 import 'login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -43,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
       name: 'Báo cáo',
       icon: Icons.bar_chart_rounded,
       color: Color(0xFF2563EB),
-      screen: BaoCaoScreen(),
+      screen: DyeingReportHubScreen(),
     ),
     AppMiniItem(
       name: 'Chi phí',
@@ -55,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
       name: 'Ghi chú',
       icon: Icons.sticky_note_2,
       color: Color(0xFFD97706),
-      screen: ComingSoonScreen(title: 'Ghi chú', color: Color(0xFFD97706)),
+      screen: BaoCaoScreen(),
     ),
     AppMiniItem(
       name: 'QR Code',
@@ -73,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
       name: 'Cài đặt',
       icon: Icons.tune,
       color: Color(0xFF6366F1),
-      screen: ComingSoonScreen(title: 'Cài đặt', color: Color(0xFF6366F1)),
+      screen: SettingsScreen(),
     ),
     AppMiniItem(
       name: 'Nhiệm vụ',
@@ -182,6 +184,8 @@ class _HomeScreenState extends State<HomeScreen> {
             _buildSearch(),
             Expanded(child: _buildGrid()),
           ])),
+          _buildComingSoonTab('Hồ sơ', Icons.person_outline),
+          _buildSettingsTab(),
         ],
       ),
       bottomNavigationBar: _buildBottomNav(),
@@ -332,6 +336,39 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ]),
+    );
+  }
+
+  // ── Tab: đang phát triển (Hồ sơ...) ────────────────────────────────────
+  Widget _buildComingSoonTab(String label, IconData icon) {
+    return SafeArea(
+      child: Center(
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Icon(icon, size: 52, color: Colors.grey.shade400),
+          const SizedBox(height: 8),
+          Text('$label đang phát triển',
+              style: TextStyle(color: Colors.grey.shade500)),
+        ]),
+      ),
+    );
+  }
+
+  // ── Tab: Cài đặt ─────────────────────────────────────────────────────
+  Widget _buildSettingsTab() {
+    return const SafeArea(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 12),
+            child: Text(
+              'Cài đặt',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
+          LanguageSettingsCard(),
+        ]),
+      ),
     );
   }
 }

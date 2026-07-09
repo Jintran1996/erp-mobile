@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'app_theme.dart';
+import 'l10n/generated/app_localizations.dart';
+import 'providers/locale_provider.dart';
 import 'screens/splash_screen.dart';
 import 'services/api_client.dart';
 import 'services/auth_service.dart';
@@ -19,9 +23,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+    return ChangeNotifierProvider(
+      create: (_) => LocaleProvider()..load(),
+      child: Consumer<LocaleProvider>(
+        builder: (context, localeProvider, _) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: appTheme,
+            locale: localeProvider.locale,
+            supportedLocales: AppLocalizations.supportedLocales,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            home: const SplashScreen(),
+          );
+        },
+      ),
     );
   }
 }

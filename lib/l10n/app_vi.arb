@@ -1,0 +1,53 @@
+{
+  "@@locale": "vi",
+
+  "dyeingReportHubTitle": "Báo cáo nhuộm",
+  "@dyeingReportHubTitle": {"description": "Tiêu đề AppBar của màn hub Báo cáo nhuộm"},
+
+  "reportRejectionsTitle": "Rejections Dashboard",
+  "reportRejectionsDesc": "Theo dõi tỷ lệ Reprocess & Defect theo tháng",
+
+  "reportProductionTitle": "Báo cáo sản xuất",
+  "reportProductionDesc": "Sản lượng, hiệu suất theo dây chuyền 123",
+
+  "reportInventoryTitle": "Báo cáo tồn kho",
+  "reportInventoryDesc": "Nguyên liệu, thành phẩm tồn kho hiện tại",
+
+  "reportQualityTitle": "Báo cáo chất lượng",
+  "reportQualityDesc": "Tổng hợp lỗi, nguyên nhân, khu vực phát sinh",
+
+  "reportPlaceholderBody": "{title} — chưa có màn hình chi tiết",
+  "@reportPlaceholderBody": {
+    "description": "Nội dung màn placeholder cho report chưa build UI",
+    "placeholders": {
+      "title": {"type": "String"}
+    }
+  },
+
+  "rejectionsNote": "*LƯU Ý: Tìm theo năm, dữ liệu cập nhật theo tháng và năm. Vui lòng chọn đúng thông tin.",
+  "rejectionsListChartLabel": "Danh sách / Biểu đồ",
+  "rejectionsReprocessChartTitle": "{year} - Reprocess %",
+  "@rejectionsReprocessChartTitle": {
+    "placeholders": {
+      "year": {"type": "int"}
+    }
+  },
+  "rejectionsDefectChartTitle": "{year} - Defect %",
+  "@rejectionsDefectChartTitle": {
+    "placeholders": {
+      "year": {"type": "int"}
+    }
+  },
+
+  "filterSearch": "Tìm kiếm",
+  "filterUpdate": "Cập nhật",
+  "filterDate": "Ngày",
+  "filterMarkets": "Thị trường",
+
+  "colMonth": "Tháng",
+  "colTotal": "Tổng",
+  "colReprocess": "Reprocess",
+  "colReprocessPercent": "Reprocess %",
+  "colDefect": "Defect",
+  "colDefectPercent": "Defect %"
+}
