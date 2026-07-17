@@ -1,6 +1,6 @@
 // lib/features/_shared/pagination_mixin.dart
 import 'package:flutter/material.dart';
-import '../../services/api_client.dart'; // ← ApiClient thay cho ApiService
+import '../../core/network/api_client.dart'; // ← ApiClient thay cho ApiService
 
 mixin ExpensePaginationMixin<T extends StatefulWidget> on State<T> {
   final ApiClient _api = ApiClient.instance;

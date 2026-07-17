@@ -8,7 +8,7 @@ import '../data/rejection_model.dart';
 import '../data/rejection_api_service.dart';
 
 class RejectionsProvider extends ChangeNotifier {
-  final _api = RejectionsApiService();
+  final _api = RejectionApiService();
 
   static const List<Map<String, String>> markets = [
     {'code': 'ALL', 'label': 'All'},
@@ -47,7 +47,8 @@ class RejectionsProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
     try {
-      final result = await _api.fetch(date: _selectedDate, market: _selectedMarket);
+      final result =
+          await _api.fetch(date: _selectedDate, market: _selectedMarket);
       _rows = result.data;
     } catch (e) {
       _error = e.toString();

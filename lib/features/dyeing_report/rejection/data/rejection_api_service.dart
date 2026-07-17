@@ -13,7 +13,7 @@ import 'package:intl/intl.dart';
 
 import 'rejection_model.dart';
 
-class RejectionsApiService {
+class RejectionApiService {
   static const String _endpoint =
       //    '${AppConfig.reportApiBaseUrl}/api/Dashboards/dashboard-report-rejections';
       'https://thaituangarment.com.vn/ReportApi/api/Dashboards/dashboard-report-rejections';

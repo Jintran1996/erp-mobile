@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'app_theme.dart';
+import 'core/theme/app_theme.dart';
 import 'l10n/generated/app_localizations.dart';
-import 'providers/locale_provider.dart';
-import 'screens/splash_screen.dart';
-import 'services/api_client.dart';
-import 'services/auth_service.dart';
+import 'shared/providers/locale_provider.dart';
+import 'features/auth/presentation/screens/splash_screen.dart';
+import 'core/network/api_client.dart';
+import 'features/auth/data/auth_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

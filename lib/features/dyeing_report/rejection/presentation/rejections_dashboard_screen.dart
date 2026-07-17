@@ -12,23 +12,23 @@ import 'widgets/rejections_filter_bar.dart';
 import 'widgets/rejections_table.dart';
 import 'widgets/rejections_line_chart_card.dart';
 
-class RejectionsDashboardPage extends StatelessWidget {
+class RejectionDashboardPage extends StatelessWidget {
   final Color color;
-  const RejectionsDashboardPage(
+  const RejectionDashboardPage(
       {super.key, this.color = const Color(0xFF2563EB)});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => RejectionsProvider()..loadFirstPage(),
-      child: _RejectionsDashboardView(color: color),
+      child: _RejectionDashboardView(color: color),
     );
   }
 }
 
-class _RejectionsDashboardView extends StatelessWidget {
+class _RejectionDashboardView extends StatelessWidget {
   final Color color;
-  const _RejectionsDashboardView({required this.color});
+  const _RejectionDashboardView({required this.color});
 
   @override
   Widget build(BuildContext context) {

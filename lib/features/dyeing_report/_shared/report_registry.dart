@@ -20,22 +20,23 @@ class ReportRegistry {
         desc: l10n.reportRejectionsDesc,
         icon: Icons.donut_large_outlined,
         color: const Color(0xFF2563EB),
-        builder: (_) =>
-            const RejectionsDashboardPage(color: Color(0xFF2563EB)),
+        builder: (_) => const RejectionDashboardPage(color: Color(0xFF2563EB)),
       ),
       ReportEntry(
         title: l10n.reportProductionTitle,
         desc: l10n.reportProductionDesc,
         icon: Icons.factory_outlined,
         color: const Color(0xFF059669),
-        builder: (_) => PlaceholderReportScreen(title: l10n.reportProductionTitle),
+        builder: (_) =>
+            PlaceholderReportScreen(title: l10n.reportProductionTitle),
       ),
       ReportEntry(
         title: l10n.reportInventoryTitle,
         desc: l10n.reportInventoryDesc,
         icon: Icons.inventory_2_outlined,
         color: const Color(0xFFD97706),
-        builder: (_) => PlaceholderReportScreen(title: l10n.reportInventoryTitle),
+        builder: (_) =>
+            PlaceholderReportScreen(title: l10n.reportInventoryTitle),
       ),
       ReportEntry(
         title: l10n.reportQualityTitle,
