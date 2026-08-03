@@ -13,11 +13,12 @@ import '../../../notification/data/notification_service.dart';
 import '../../../../core/widgets/app_mini_card.dart';
 import '../../../../core/widgets/notification_badge.dart';
 import '../../../expense/presentation/screens/expense_screen.dart';
-import '../../../dyeing_report/dyeing_report_hub_screen.dart';
+import '../../../dyeing/dyeing_report_hub_screen.dart';
 import '../../../_shared/app_mini_base.dart';
 import '../../../notification/presentation/screens/notification_screen.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
 import '../../../auth/presentation/screens/login_screen.dart';
+import '../../../finance/budget_plan/presentation/screens/budget_plan_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -42,16 +43,22 @@ class _HomeScreenState extends State<HomeScreen> {
   // AppMiniItem định nghĩa ở lib/widgets/app_mini_card.dart
   final List<AppMiniItem> _apps = const [
     AppMiniItem(
-      name: 'Báo cáo',
-      icon: Icons.bar_chart_rounded,
-      color: Color(0xFF2563EB),
-      screen: DyeingReportHubScreen(),
-    ),
-    AppMiniItem(
       name: 'Chi phí',
       icon: Icons.attach_money,
       color: Color(0xFF16A34A),
       screen: ExpenseScreen(),
+    ),
+    AppMiniItem(
+      name: 'Ngân sách',
+      icon: Icons.account_balance_outlined,
+      color: Color(0xFF2563EB),
+      screen: BudgetPlanScreen(),
+    ),
+    AppMiniItem(
+      name: 'Báo cáo',
+      icon: Icons.bar_chart_rounded,
+      color: Color.fromARGB(255, 169, 196, 255),
+      screen: DyeingReportHubScreen(),
     ),
     AppMiniItem(
       name: 'Ghi chú',

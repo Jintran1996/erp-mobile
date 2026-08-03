@@ -16,6 +16,7 @@ import '../../_shared/expense_formatters.dart';
 import '../../../../shared/providers/comment_provider.dart';
 import '../../../../shared/widgets/comment_section.dart';
 import '../../../auth/data/auth_service.dart';
+import '../../../../../core/constants/document_types.dart';
 
 class AdvanceSettlementsDetailScreen extends StatelessWidget {
   final String id;
@@ -36,7 +37,10 @@ class AdvanceSettlementsDetailScreen extends StatelessWidget {
             create: (_) => SettlementDetailProvider()..load(id)),
         ChangeNotifierProvider(
             create: (_) => CommentProvider()
-              ..init(id, 'advance-settlement')
+              ..init(
+                  id,
+                  DocumentType.advanceSettlement.value
+                      .toString()) //'advance-settlement'
               ..loadComments()),
       ],
       child: _SettlementDetailView(

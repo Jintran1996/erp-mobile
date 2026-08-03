@@ -32,6 +32,10 @@ Widget expenseSection({
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(14),
+      border: Border.all(
+        color: const Color(0xFFE2E8F0), // Màu xám nhẹ tinh tế
+        width: 1.0, // Độ dày nét viền mảnh
+      ),
       boxShadow: [
         BoxShadow(
           color: Colors.black.withValues(alpha: 0.04),

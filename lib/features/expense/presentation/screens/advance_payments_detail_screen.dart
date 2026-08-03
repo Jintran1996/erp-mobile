@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../../providers/payment_provider.dart';
 import '../../data/models/payment_model.dart';
 import '../../data/models/advance_model.dart';
-//import '../../_shared/countdown_timer.dart';
+import '../../../../shared/widgets/countdown_timer.dart';
 import '../../../_shared/ui/chips.dart';
 import '../../../_shared/ui/section_widgets.dart';
 import '../../_shared/expense_status.dart';
@@ -15,6 +15,7 @@ import '../../_shared/expense_formatters.dart';
 import '../../../../shared/providers/comment_provider.dart';
 import '../../../../shared/widgets/comment_section.dart';
 import '../../../auth/data/auth_service.dart';
+import '../../../../../core/constants/document_types.dart';
 
 class AdvancePaymentsDetailScreen extends StatelessWidget {
   final String id;
@@ -35,7 +36,10 @@ class AdvancePaymentsDetailScreen extends StatelessWidget {
             create: (_) => AdvanceDetailProvider()..load(id)),
         ChangeNotifierProvider(
             create: (_) => CommentProvider()
-              ..init(id, 'advance-payment')
+              ..init(
+                  id,
+                  DocumentType.advancePayment.value
+                      .toString()) // 'advance-payment'
               ..loadComments()),
       ],
       child: _AdvanceDetailView(
@@ -93,6 +97,7 @@ class _AdvanceDetailView extends StatelessWidget {
 
   PreferredSizeWidget _buildAppBar(BuildContext context, AdvanceDetail d) {
     final cfg = getStatusCfg(d.status);
+    final dueAt = d.currentStep?.dueAt;
     return PreferredSize(
       preferredSize: const Size.fromHeight(80),
       child: Container(
@@ -110,21 +115,37 @@ class _AdvanceDetailView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(d.subId,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold)),
-                const SizedBox(height: 4),
                 Row(children: [
-                  statusBadge(
-                      label: cfg.label, bg: cfg.bg, fg: cfg.text, fontSize: 11),
-                  const SizedBox(width: 8),
+                  Text(d.subId,
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold)),
                   Flexible(
                       child: Text(formatDateTime(d.createdAt),
                           style: const TextStyle(
                               color: Colors.white70, fontSize: 11),
                           overflow: TextOverflow.ellipsis)),
+                  const SizedBox(height: 4),
+                ]),
+                Row(children: [
+                  statusBadge(
+                      label: cfg.label, bg: cfg.bg, fg: cfg.text, fontSize: 11),
+                  const SizedBox(width: 8),
+
+                  //  --- GỌI WIDGET ĐẾM NGƯỢC THỜI GIAN SLA DẠNG MINI ---
+                  Flexible(
+                    child: CountdownTimer(
+                      dueAt: dueAt ??
+                          DateTime.now()
+                              .add(const Duration(days: 1))
+                              .toString(), // Truyền trường do backend trả về
+                      isMini:
+                          true, // Kích hoạt giao diện mini thanh lịch cho AppBar [1]
+                      overdueLabel:
+                          'Quá hạn', // Rút ngắn nhãn để tránh tràn màn hình di động [2]
+                    ),
+                  ),
                   if (d.isForeignPayment) ...[
                     const SizedBox(width: 6),
                     Container(
@@ -142,9 +163,11 @@ class _AdvanceDetailView extends StatelessWidget {
               ],
             )),
             IconButton(
-              icon: const Icon(Icons.refresh, color: Colors.white),
-              onPressed: () => context.read<AdvanceDetailProvider>().load(id),
-            ),
+                icon: const Icon(Icons.refresh, color: Colors.white),
+                onPressed: () => {
+                      context.read<AdvanceDetailProvider>().load(id),
+                      context.read<CommentProvider>().loadComments()
+                    }),
             IconButton(
               icon: const Icon(Icons.home_outlined, color: Colors.white),
               onPressed: () => Navigator.popUntil(context, (r) => r.isFirst),
@@ -596,7 +619,7 @@ class _AdvanceDetailView extends StatelessWidget {
                 foregroundColor: Colors.white,
                 minimumSize: const Size(0, 40),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14))),
+                    borderRadius: BorderRadius.circular(12))),
             child: p.acting
                 ? const SizedBox(
                     width: 18,
@@ -616,7 +639,7 @@ class _AdvanceDetailView extends StatelessWidget {
                 foregroundColor: Colors.white,
                 minimumSize: const Size(0, 40),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14))),
+                    borderRadius: BorderRadius.circular(12))),
             child: const Text('Từ chối',
                 style: TextStyle(fontWeight: FontWeight.w600)),
           ),

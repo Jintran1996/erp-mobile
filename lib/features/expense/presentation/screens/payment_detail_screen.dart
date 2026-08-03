@@ -14,6 +14,7 @@ import '../../_shared/expense_status.dart';
 import '../../_shared/expense_formatters.dart';
 import '../../../../shared/providers/comment_provider.dart';
 import '../../../../shared/widgets/comment_section.dart';
+import '../../../../../core/constants/document_types.dart';
 
 class PaymentDetailScreen extends StatelessWidget {
   final String id;
@@ -34,7 +35,10 @@ class PaymentDetailScreen extends StatelessWidget {
             create: (_) => PaymentDetailProvider()..load(id)),
         ChangeNotifierProvider(
             create: (_) => CommentProvider()
-              ..init(id, 'expense-payment')
+              ..init(
+                  id,
+                  DocumentType.expensePayment.value
+                      .toString()) //'expense-payment'
               ..loadComments()),
       ],
       child: _PaymentDetailView(

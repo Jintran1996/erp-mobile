@@ -106,15 +106,15 @@ Widget statusBadge({
   double fontSize = 11,
 }) {
   return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
     decoration: BoxDecoration(
       color: bg,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(6),
     ),
     child: Text(
       label,
       style: TextStyle(
-        fontSize: fontSize,
+        fontSize: 10,
         color: fg,
         fontWeight: FontWeight.w600,
       ),

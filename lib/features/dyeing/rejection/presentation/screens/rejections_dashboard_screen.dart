@@ -6,11 +6,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../l10n/generated/app_localizations.dart';
-import 'rejections_provider.dart';
-import 'widgets/rejections_filter_bar.dart';
-import 'widgets/rejections_table.dart';
-import 'widgets/rejections_line_chart_card.dart';
+import '../../../../../l10n/generated/app_localizations.dart';
+import '../../providers/rejections_provider.dart';
+import '../widgets/rejections_filter_bar.dart';
+import '../widgets/rejections_table.dart';
+import '../widgets/rejections_line_chart_card.dart';
 
 class RejectionDashboardPage extends StatelessWidget {
   final Color color;

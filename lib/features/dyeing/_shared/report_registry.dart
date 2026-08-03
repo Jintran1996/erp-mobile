@@ -6,7 +6,7 @@
 
 import 'package:flutter/material.dart';
 import '../../../l10n/generated/app_localizations.dart';
-import '../rejection/presentation/rejections_dashboard_screen.dart';
+import '../rejection/presentation/screens/rejections_dashboard_screen.dart';
 import 'placeholder_report_screen.dart';
 import 'report_entry.dart';
 

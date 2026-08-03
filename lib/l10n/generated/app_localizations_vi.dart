@@ -12,7 +12,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get dyeingReportHubTitle => 'Báo cáo nhuộm';
 
   @override
-  String get reportRejectionsTitle => 'Rejections Dashboard';
+  String get reportRejectionsTitle => 'Dashboard Hàng lỗi';
 
   @override
   String get reportRejectionsDesc =>

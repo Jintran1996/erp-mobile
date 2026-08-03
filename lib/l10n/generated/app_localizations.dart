@@ -107,7 +107,7 @@ abstract class AppLocalizations {
   /// No description provided for @reportRejectionsTitle.
   ///
   /// In vi, this message translates to:
-  /// **'Rejections Dashboard'**
+  /// **'Dashboard Hàng lỗi'**
   String get reportRejectionsTitle;
 
   /// No description provided for @reportRejectionsDesc.

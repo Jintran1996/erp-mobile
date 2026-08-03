@@ -3,6 +3,7 @@
 ///
 /// Tách riêng để: payment_list, advance_list, payment_detail,
 /// advance_detail... không phải tự viết lại các hàm này mỗi file.
+library;
 
 /// Format số tiền có dấu chấm ngăn cách hàng nghìn.
 /// Ví dụ: 1296000 → "1.296.000"

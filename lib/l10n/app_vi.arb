@@ -4,7 +4,7 @@
   "dyeingReportHubTitle": "Báo cáo nhuộm",
   "@dyeingReportHubTitle": {"description": "Tiêu đề AppBar của màn hub Báo cáo nhuộm"},
 
-  "reportRejectionsTitle": "Rejections Dashboard",
+  "reportRejectionsTitle": "Dashboard Hàng lỗi",
   "reportRejectionsDesc": "Theo dõi tỷ lệ Reprocess & Defect theo tháng",
 
   "reportProductionTitle": "Báo cáo sản xuất",

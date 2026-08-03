@@ -1,3 +1,4 @@
 {
-    "suitecloud.developerAssistant.disableWelcomeNotification": true
+    "suitecloud.developerAssistant.disableWelcomeNotification": true,
+    "cmake.sourceDirectory": "D:/Tai-lieu-app/erp_mobile/linux"
 }

@@ -1,9 +1,10 @@
 // lib/providers/payment_provider.dart
 
 import 'package:flutter/foundation.dart';
+import 'approval_detail_provider.dart';
 import '../data/models/payment_model.dart';
 import '../data/models/advance_model.dart';
-import '../data/models/advance_settlement_model.dart'; // ✅ Fix #2: cùng path với repository
+import '../data/models/advance_settlement_model.dart';
 import '../data/repositories/payment_repository.dart';
 
 enum PaymentTab { following, pendingApproval }
@@ -150,173 +151,30 @@ class PaymentListProvider extends ChangeNotifier {
   }
 }
 
-// ── PaymentDetailProvider ─────────────────────────────────────────────
-class PaymentDetailProvider extends ChangeNotifier {
-  final _repo = PaymentRepository.instance;
-  PaymentDetail? _detail;
-  bool _loading = false;
-  String? _error;
-  bool _acting = false;
-
-  PaymentDetail? get detail => _detail;
-  bool get loading => _loading;
-  String? get error => _error;
-  bool get acting => _acting;
-
-  Future<void> load(String id) async {
-    _loading = true;
-    _error = null;
-    notifyListeners();
-    try {
-      _detail = await _repo.getDetail(id);
-    } catch (e) {
-      _error = e.toString();
-    } finally {
-      _loading = false;
-      notifyListeners();
-    }
-  }
-
-  Future<bool> approve(String id, String workflowInstanceId) async {
-    _acting = true;
-    notifyListeners();
-    try {
-      await _repo.approve(workflowInstanceId);
-      await load(id);
-      return true;
-    } catch (e) {
-      _acting = false;
-      notifyListeners();
-      return false;
-    }
-  }
-
-  Future<bool> reject(
-      String id, String workflowInstanceId, String reason) async {
-    _acting = true;
-    notifyListeners();
-    try {
-      await _repo.reject(workflowInstanceId, reason);
-      await load(id);
-      return true;
-    } catch (e) {
-      _acting = false;
-      notifyListeners();
-      return false;
-    }
-  }
+class PaymentDetailProvider extends ApprovalDetailProvider<PaymentDetail> {
+  PaymentDetailProvider()
+      : super(
+          fetchDetail: PaymentRepository.instance.getDetail,
+          approve: PaymentRepository.instance.approve,
+          reject: PaymentRepository.instance.reject,
+        );
 }
 
-// ── AdvanceDetailProvider — Fix #3: thêm lại class bị thiếu ──────────
-class AdvanceDetailProvider extends ChangeNotifier {
-  final _repo = AdvanceRepository.instance;
-  AdvanceDetail? _detail;
-  bool _loading = false;
-  String? _error;
-  bool _acting = false;
-
-  AdvanceDetail? get detail => _detail;
-  bool get loading => _loading;
-  String? get error => _error;
-  bool get acting => _acting;
-
-  Future<void> load(String id) async {
-    _loading = true;
-    _error = null;
-    notifyListeners();
-    try {
-      _detail = await _repo.getDetail(id);
-    } catch (e) {
-      _error = e.toString();
-    } finally {
-      _loading = false;
-      notifyListeners();
-    }
-  }
-
-  Future<bool> approve(String id, String workflowInstanceId) async {
-    _acting = true;
-    notifyListeners();
-    try {
-      await _repo.approve(workflowInstanceId);
-      await load(id);
-      return true;
-    } catch (e) {
-      _acting = false;
-      notifyListeners();
-      return false;
-    }
-  }
-
-  Future<bool> reject(
-      String id, String workflowInstanceId, String reason) async {
-    _acting = true;
-    notifyListeners();
-    try {
-      await _repo.reject(workflowInstanceId, reason);
-      await load(id);
-      return true;
-    } catch (e) {
-      _acting = false;
-      notifyListeners();
-      return false;
-    }
-  }
+class AdvanceDetailProvider extends ApprovalDetailProvider<AdvanceDetail> {
+  AdvanceDetailProvider()
+      : super(
+          fetchDetail: AdvanceRepository.instance.getDetail,
+          approve: AdvanceRepository.instance.approve,
+          reject: AdvanceRepository.instance.reject,
+        );
 }
 
-// ── SettlementDetailProvider ──────────────────────────────────────────
-class SettlementDetailProvider extends ChangeNotifier {
-  final _repo = SettlementRepository.instance;
-  SettlementDetail? _detail;
-  bool _loading = false;
-  String? _error;
-  bool _acting = false;
-
-  SettlementDetail? get detail => _detail;
-  bool get loading => _loading;
-  String? get error => _error;
-  bool get acting => _acting;
-
-  Future<void> load(String id) async {
-    _loading = true;
-    _error = null;
-    notifyListeners();
-    try {
-      _detail = await _repo.getDetail(id);
-    } catch (e) {
-      _error = e.toString();
-    } finally {
-      _loading = false;
-      notifyListeners();
-    }
-  }
-
-  Future<bool> approve(String id, String workflowInstanceId) async {
-    _acting = true;
-    notifyListeners();
-    try {
-      await _repo.approve(workflowInstanceId);
-      await load(id);
-      return true;
-    } catch (e) {
-      _acting = false;
-      notifyListeners();
-      return false;
-    }
-  }
-
-  Future<bool> reject(
-      String id, String workflowInstanceId, String reason) async {
-    _acting = true;
-    notifyListeners();
-    try {
-      await _repo.reject(workflowInstanceId, reason);
-      await load(id);
-      return true;
-    } catch (e) {
-      _acting = false;
-      notifyListeners();
-      return false;
-    }
-  }
+class SettlementDetailProvider
+    extends ApprovalDetailProvider<SettlementDetail> {
+  SettlementDetailProvider()
+      : super(
+          fetchDetail: SettlementRepository.instance.getDetail,
+          approve: SettlementRepository.instance.approve,
+          reject: SettlementRepository.instance.reject,
+        );
 }

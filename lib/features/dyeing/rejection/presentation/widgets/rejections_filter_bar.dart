@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../../../../l10n/generated/app_localizations.dart';
-import '../rejections_provider.dart';
+import '../../providers/rejections_provider.dart';
 
 class RejectionsFilterBar extends StatefulWidget {
   final Color color;
@@ -76,7 +76,9 @@ class _RejectionsFilterBarState extends State<RejectionsFilterBar> {
         ),
       ];
       return isNarrow
-          ? Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: children)
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: children)
           : Row(children: children);
     });
   }
@@ -109,7 +111,8 @@ class _RejectionsFilterBarState extends State<RejectionsFilterBar> {
           isDense: true,
         ),
         items: RejectionsProvider.markets
-            .map((m) => DropdownMenuItem(value: m['code'], child: Text(m['label']!)))
+            .map((m) =>
+                DropdownMenuItem(value: m['code'], child: Text(m['label']!)))
             .toList(),
         onChanged: (v) {
           if (v != null) p.setMarket(v);
