@@ -31,7 +31,8 @@ class RejectionMonthData {
     );
   }
 
-  String get monthLabel => 'Tháng $thang';
+  // String get monthLabel => 'Tháng $thang';
+  String get monthLabel => '$thang';
 }
 
 class RejectionsResponse {

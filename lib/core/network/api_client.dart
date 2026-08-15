@@ -11,7 +11,10 @@
 //   2. onError 401 → token hết đột xuất → reactive refresh + retry
 //   3. Cả 2 fail  → logout + ném SessionExpiredException
 
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import '../../config/app_config.dart';
 
 // ── Interface: ApiClient chỉ biết về interface này, không biết AuthService ──
@@ -41,6 +44,12 @@ class ApiClient {
       onRequest: _onRequest,
       onError: _onError,
     ));
+
+    (_dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
+      final client = HttpClient();
+      client.badCertificateCallback = (cert, host, port) => true;
+      return client;
+    };
   }
 
   static final ApiClient instance = ApiClient._();

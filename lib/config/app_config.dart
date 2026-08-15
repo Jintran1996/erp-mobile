@@ -11,11 +11,12 @@ class AppConfig {
   //   (xem IP máy tính bằng: ipconfig / ifconfig)
   //
   // PRODUCTION:
-  //   static const String baseUrl = 'https://thaituangarment.com.vn/erp2025';
+  //static const String baseUrl = 'https://thaituangarment.com.vn/erp2025';
   //
   // ──────────────────────────────────────────────────────────
 
   static const String baseUrl = 'https://localhost:7228'; // ← đổi IP ở đây
+  // static const String baseUrl = 'http://10.0.2.2:5202'; // ← đổi IP ở đây
 
   static const String hubUrl = '$baseUrl/hubs/notifications';
 }

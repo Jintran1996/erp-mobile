@@ -207,12 +207,26 @@ class _HomeScreenState extends State<HomeScreen> {
       type: BottomNavigationBarType.fixed,
       selectedItemColor: const Color(0xFF2563EB),
       unselectedItemColor: Colors.grey,
+      // 💡 Thêm các dòng dưới đây để tăng kích thước khi được chọn
+      selectedIconTheme: const IconThemeData(
+        size: 26, // Tăng kích thước icon lên 30 (mặc định là 24)
+      ),
+      unselectedIconTheme: const IconThemeData(
+        size: 16, // Giữ nguyên kích thước khi chưa chọn
+      ),
+      selectedLabelStyle: const TextStyle(
+        fontSize: 14, // Tăng cỡ chữ khi chọn
+        fontWeight: FontWeight.bold,
+      ),
+      unselectedLabelStyle: const TextStyle(
+        fontSize: 8, // Cỡ chữ nhỏ hơn khi chưa chọn
+      ),
       items: const [
         BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined), label: 'Trang chủ'),
         BottomNavigationBarItem(icon: Icon(Icons.apps_outlined), label: 'Apps'),
         BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline), label: 'Hồ sơ'),
+            icon: Icon(Icons.notifications_rounded), label: 'Thông báo'),
         BottomNavigationBarItem(
             icon: Icon(Icons.settings_outlined), label: 'Cài đặt'),
       ],

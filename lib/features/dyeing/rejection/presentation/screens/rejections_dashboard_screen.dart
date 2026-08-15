@@ -83,8 +83,16 @@ class _RejectionDashboardView extends StatelessWidget {
               onPressed: () => Navigator.pop(context),
             )
           : null,
-      title: Text(AppLocalizations.of(context)!.reportRejectionsTitle,
-          style: const TextStyle(fontWeight: FontWeight.bold)),
+      // Sử dụng FittedBox để tự động giảm size chữ nếu tiêu đề quá dài
+      title: FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment:
+            Alignment.centerLeft, // Giữ tiêu đề canh lề trái như mặc định
+        child: Text(
+          AppLocalizations.of(context)!.reportRejectionsTitle,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
       backgroundColor: color,
       foregroundColor: Colors.white,
       elevation: 0,
