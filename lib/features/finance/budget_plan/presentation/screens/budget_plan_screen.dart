@@ -14,6 +14,7 @@ import '../widgets/budget_plan_card.dart';
 import '../widgets/budget_plan_adjustment_card.dart';
 import '../../../../../features/expense/_shared/expense_formatters.dart';
 import '../widgets/app_tab_bar.dart';
+import '../../../../../core/constants/app_module.dart';
 
 class BudgetPlanScreen extends StatefulWidget {
   const BudgetPlanScreen({super.key});
@@ -56,7 +57,7 @@ class _BudgetPlanScreenState extends State<BudgetPlanScreen>
       child: Builder(
         builder: (context) {
           return Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: AppColor.backgroundColor.value,
             // KHÔNG dùng Scaffold.appBar nữa: AppBar luôn được Scaffold vẽ
             // ĐÈ LÊN TRÊN body (paint order), nên nếu để header trong
             // appBar, tab bar nổi (nằm trong body) sẽ bị header CHE MẤT
@@ -93,9 +94,9 @@ class _BudgetPlanScreenState extends State<BudgetPlanScreen>
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                               colors: [
-                                Color.fromARGB(255, 56, 113, 236),
-                                Color.fromARGB(255, 82, 162, 228),
-                                Color(0xFF1D4ED8),
+                                Color.fromARGB(255, 255, 255, 255),
+                                Color.fromARGB(255, 255, 255, 255),
+                                Color.fromARGB(255, 255, 255, 255),
                               ],
                             ),
                           ),
@@ -104,24 +105,24 @@ class _BudgetPlanScreenState extends State<BudgetPlanScreen>
                             child: Row(
                               children: [
                                 IconButton(
-                                  icon: const Icon(Icons.arrow_back,
-                                      color: Colors.white),
+                                  icon: Icon(Icons.arrow_back,
+                                      color: AppColor.headerTextFinance.value),
                                   onPressed: () =>
                                       Navigator.of(context).maybePop(),
                                 ),
-                                const Expanded(
+                                Expanded(
                                   child: Text(
                                     'Ngân sách',
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: AppColor.headerTextFinance.value,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
                                     ),
                                   ),
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.refresh,
-                                      color: Colors.white),
+                                  icon: Icon(Icons.refresh,
+                                      color: AppColor.headerTextFinance.value),
                                   tooltip: 'Làm mới',
                                   onPressed: () => _tabController.index == 0
                                       ? context
@@ -132,8 +133,8 @@ class _BudgetPlanScreenState extends State<BudgetPlanScreen>
                                           .load(),
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.home_outlined,
-                                      color: Colors.white),
+                                  icon: Icon(Icons.home_outlined,
+                                      color: AppColor.headerTextFinance.value),
                                   tooltip: 'Trang chủ',
                                   onPressed: () => Navigator.popUntil(
                                       context, (r) => r.isFirst),
